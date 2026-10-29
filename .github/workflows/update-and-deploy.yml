@@ -1,0 +1,72 @@
+name: 데이터 갱신 및 배포
+
+on:
+  schedule:
+    - cron: '7 21 * * 0'
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: update-and-deploy
+  cancel-in-progress: false
+
+jobs:
+  update:
+    if: github.event_name != 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: FISIS 수집
+        env:
+          FISIS_API_KEY: ${{ secrets.FISIS_API_KEY }}
+        run: |
+          if [ -z "$FISIS_API_KEY" ]; then
+            echo "::warning::FISIS_API_KEY 시크릿이 없어 수집을 건너뜁니다."
+            exit 0
+          fi
+          python scripts/fetch_fisis.py
+
+      - name: 변경 시에만 커밋
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/fisis_data.json
+          if git diff --staged --quiet; then
+            echo "변경 없음" >> "$GITHUB_STEP_SUMMARY"
+          else
+            Q=$(python -c "import json;print(json.load(open('data/fisis_data.json'))['meta']['latest'])")
+            git commit -m "data: FISIS ${Q} 기준 갱신"
+            git push
+            echo "**${Q} 기준으로 갱신**" >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+  deploy:
+    needs: update
+    if: >-
+      always() && vars.DEPLOY_TARGET != 'cloudflare' &&
+      (needs.update.result == 'success' || needs.update.result == 'skipped')
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+      - id: deployment
+        uses: actions/deploy-pages@v4
