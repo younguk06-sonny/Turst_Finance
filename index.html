@@ -493,7 +493,7 @@ function init(data) {
     .map(k => `<li><b>${M[k].name}</b> — ${M[k].def}</li>`).join("");
   if (D.meta.seed) {
     $("notice").hidden = false;
-    $("notice").innerHTML = `<b>초기 데이터</b> · ${D.meta.note || "아직 자동 수집이 실행되지 않았습니다."} GitHub Actions에서 첫 수집이 끝나면 이 안내는 사라집니다.`;
+    $("notice").innerHTML = `<b>초기 데이터</b> · ${D.meta.note || "아직 자동 수집이 실행되지 않았습니다."} 본인 인증키로 수집하면 이 안내는 사라집니다.`;
   }
   const gen = D.meta.generated_at ? new Date(D.meta.generated_at) : null;
   $("foot").innerHTML = `<p>출처: ${D.meta.source} · 통계표 ${D.meta.tables.join(", ")} · ${D.meta.basis}</p>

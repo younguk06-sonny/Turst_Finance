@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+.DS_Store
+Thumbs.db
+icons/icon-preview.png
+fisis_key.txt
+cloudflare-upload.zip
