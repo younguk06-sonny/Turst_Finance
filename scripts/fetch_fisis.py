@@ -273,6 +273,12 @@ def derive(raw: dict[str, dict]) -> None:
             ttm[f] = round(sum(seq), 1) if all(x is not None for x in seq) else None
             d[f + "_ttm"] = ttm[f]
         cls = d.get("tal_class")
+        # SM016 금액 단위가 응답마다 달라(원·백만원 등) 신탁계정대 잔액(SM005)과 맞춰 10의 거듭제곱으로 보정
+        if cls and d.get("trust_loan") and sum(cls) > 0:
+            import math
+            f = 10 ** round(math.log10(d["trust_loan"] / sum(cls)))
+            if f != 1:
+                cls = d["tal_class"] = [round(x * f, 1) for x in cls]
         if cls:
             d["tal_npl"] = round(sum(cls[2:]), 1)
             d["tal_classified"] = round(sum(cls), 1)   # 합산평균 분모
