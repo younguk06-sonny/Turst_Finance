@@ -190,7 +190,8 @@ def fetch_table(fcd: str, list_no: str, start: str, end: str) -> list[dict]:
     for r in rows(res):
         out.append({"ym": str(r.get("base_month")), "cd": str(r.get("account_cd") or ""),
                     "nm": str(r.get("account_nm") or "").replace(" ", ""),
-                    "ids": ids, "units": units, "v": {cid: num(r.get(cid)) for cid in ids}})
+                    "ids": ids, "units": units,
+                    "v": {cid: num(r.get(cid)) for cid in [*ids, *"abcdef"]}})
     return out
 
 
@@ -232,11 +233,14 @@ def collect() -> dict:
                     series.setdefault(q, {})[field] = round(val, 2 if field in RATIO_FIELDS else 1)
         # 신탁계정대 건전성 분류(정상·요주의·고정·회수의문·추정손실)
         try:
-            for r in fetch_table(c["code"], "SM016", start, end):
-                if r["cd"] != SM016_ACCOUNT and "신탁계정대" not in r["nm"]:
-                    continue
-                v = [to_eok(r["v"].get(i) or 0, u) for i, u in zip(r["ids"][:5], r["units"][:5])]
-                if len(v) == 5:
+            tr = fetch_table(c["code"], "SM016", start, end)
+            # 계정코드 K(신탁계정대) 행만 사용. 없을 때만 계정명이 정확히 '신탁계정대'인 행.
+            hit = [r for r in tr if r["cd"] == SM016_ACCOUNT] or [r for r in tr if r["nm"] == "신탁계정대"]
+            for r in hit:
+                unit = dict(zip(r["ids"], r["units"])).get("a", "")
+                # 값 컬럼 a~e = 정상·요주의·고정·회수의문·추정손실
+                v = [to_eok(r["v"].get(col) or 0, unit) for col in "abcde"]
+                if sum(v) > 0:
                     s = series.setdefault(qlabel(r["ym"]), {})
                     s["tal_class"] = [round(x, 1) for x in v]
         except FisisError as e:
