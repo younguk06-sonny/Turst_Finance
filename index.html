@@ -81,7 +81,8 @@ main { grid-template-columns: minmax(0, 1fr) }
 .vhead { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 8px 14px }
 .vhead h2 { margin: 0; font-size: 16px; font-weight: 700 }
 .vhead p { margin: 2px 0 0; font-size: 12px; color: var(--muted) }
-.sec-title { display: flex; align-items: baseline; gap: 10px; margin: 8px 0 -4px }
+.sec-title { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 10px; margin: 8px 0 -4px }
+.sec-title h2 { white-space: nowrap }
 .sec-title h2 { margin: 0; font-size: 15px; font-weight: 700 }
 .sec-title span { font-size: 12px; color: var(--muted) }
 
@@ -157,6 +158,44 @@ select { background: var(--surface); border: 1px solid var(--line); border-radiu
 .ind b { font-family: var(--f-num); font-size: 19px; font-weight: 500; letter-spacing: -.02em }
 .ind em { font-style: normal; font-family: var(--f-num); font-size: 11.5px }
 
+/* 지표별 카드 */
+.mcards { display: grid; gap: 12px; grid-template-columns: repeat(3, minmax(0, 1fr)) }
+.mc { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 14px 14px 10px; box-shadow: var(--shadow); min-width: 0; display: flex; flex-direction: column }
+.mc[aria-current="true"] { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent) inset, var(--shadow) }
+.mc-h { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; border: 0; background: none; padding: 0; text-align: left; cursor: pointer; width: 100% }
+.mc-h h3 { margin: 0; font-size: 14px; font-weight: 700 }
+.mc-h .def1 { display: block; font-size: 11px; color: var(--muted); margin-top: 2px }
+.mc-h:hover h3 { color: var(--accent) }
+.mc-k { text-align: right; flex: none }
+.mc-k span { display: block; font-size: 10.5px; color: var(--muted) }
+.mc-k b { font-family: var(--f-num); font-size: 22px; font-weight: 500; letter-spacing: -.02em; line-height: 1.15 }
+.mc-k b small { font-size: 12px; color: var(--muted); margin-left: 1px }
+.mc-k em { display: block; font-style: normal; font-family: var(--f-num); font-size: 11px }
+.mc-sp { margin: 10px 0 8px; padding: 8px 8px 6px; background: var(--sunk); border-radius: 10px }
+.mc-sp .sp-t { font-size: 11px; color: var(--muted); margin-bottom: 2px }
+.mc-sp svg { display: block; width: 100%; height: 30px }
+.sp-q { display: grid; text-align: center; margin-top: 2px }
+.sp-q span { display: block; font-size: 10px; color: var(--muted); font-family: var(--f-num) }
+.sp-q b { font-family: var(--f-num); font-size: 12px; font-weight: 500 }
+.sp-q b small, .mr .bv small { font-size: .82em; margin-left: 1px; opacity: .75 }
+.sp-q .last b { color: var(--accent); font-weight: 700 }
+.mc-list { display: grid; gap: 1px; margin-top: 2px }
+.mr { display: grid; grid-template-columns: 16px minmax(0, 5.6em) minmax(0, 1fr) 5.4em; align-items: center; gap: 6px; border: 0; background: none; padding: 2.5px 4px; border-radius: 6px; text-align: left; cursor: pointer; font-size: 12px }
+.mr:hover { background: var(--sunk) }
+.mr .rk-n { font-family: var(--f-num); font-size: 10.5px; color: var(--muted); text-align: right }
+.mr .nm { overflow: hidden; text-overflow: ellipsis; white-space: nowrap }
+.mr .bv { font-family: var(--f-num); text-align: right; white-space: nowrap }
+.mr.mine { background: var(--mine-bg); font-weight: 700; box-shadow: inset 0 0 0 1px var(--mine-line) }
+.mb2 { position: relative; height: 8px; background: var(--sunk); border-radius: 4px }
+.mb2 i { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 4px; background: var(--accent) }
+.mb2 i.good { background: var(--good) } .mb2 i.warn { background: var(--warn) } .mb2 i.bad { background: var(--bad) }
+.mb2 i.cap { border-radius: 4px 0 0 4px; background-image: repeating-linear-gradient(-45deg, transparent 0 3px, rgba(255,255,255,.45) 3px 5px) }
+.mb2 u { position: absolute; top: -3px; bottom: -3px; width: 2px; background: var(--fg); border-radius: 1px }
+.mb2 s { position: absolute; top: -3px; bottom: -3px; width: 0; border-left: 1.5px dashed var(--bad) }
+.mc-f { display: flex; justify-content: space-between; gap: 8px; margin-top: auto; padding-top: 8px; font-size: 11px; color: var(--muted) }
+.mc-f b { color: var(--fg) }
+@media (max-width: 980px) { .mcards { grid-template-columns: repeat(2, minmax(0, 1fr)) } }
+@media (max-width: 600px) { .mcards { grid-template-columns: minmax(0, 1fr) } }
 /* 신탁사 카드 */
 .cards { display: grid; gap: 12px; grid-template-columns: repeat(3, minmax(0, 1fr)) }
 .co { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 14px; box-shadow: var(--shadow); cursor: pointer; text-align: left; display: block; width: 100%; position: relative; overflow: hidden }
@@ -297,23 +336,10 @@ footer p { margin: 0 }
 
     <div class="ind" id="ind"></div>
 
-    <div class="sec-title"><h2>신탁사별 현황</h2><span>카드를 누르면 상세 화면으로 이동합니다</span></div>
-    <div class="bar">
-      <div class="chips" id="flt" role="group" aria-label="상태 필터"></div>
-      <label for="sort-select" style="margin-left:auto">정렬</label>
-      <select id="sort-select">
-        <option value="trust_loan">신탁계정대 잔액</option>
-        <option value="total_assets">자산총계</option>
-        <option value="tal_to_equity">신탁계정대/자본</option>
-        <option value="tal_npl_ratio">신탁계정대 고정이하</option>
-        <option value="ncr_asc">NCR 낮은 순</option>
-        <option value="roe_asc">ROE 낮은 순</option>
-        <option value="name">이름순</option>
-      </select>
-    </div>
-    <div class="cards" id="cards"></div>
+    <div class="sec-title"><h2>지표별 현황</h2><span id="mx-sub">지표마다 업계 합산평균과 14개사 순위입니다. 카드를 누르면 아래에서 자세히 봅니다.</span></div>
+    <div class="mcards" id="mcards"></div>
 
-    <div class="sec-title"><h2>지표별 비교</h2><span>지표를 고르면 순위와 최근 4분기 추이가 바뀝니다</span></div>
+    <div class="sec-title" id="detail"><h2>지표 상세</h2><span>지표를 고르면 순위와 최근 4분기 추이가 바뀝니다</span></div>
     <div class="chips" id="metric-chips" role="group" aria-label="지표 선택"></div>
     <div class="grid2">
       <div class="card"><h2 id="rank-title">순위</h2><p class="sub" id="rank-sub"></p><div class="chart" id="rank-box"><canvas id="c-rank"></canvas></div></div>
@@ -716,7 +742,51 @@ function renderOverview() {
   $("ind").innerHTML = IND.map(k => { const v = indAvg(k, q), p = pq ? indAvg(k, pq) : null;
     return `<div><span>업계 ${M[k].short}</span><b>${fmt(v, k)}<small style="font-size:12px;color:var(--muted)">%</small></b>${deltaHTML(k, v, p)}</div>` }).join("");
 
-  renderCards();
+  renderMetricCards();
+}
+
+// ── 지표별 현황 카드 ─────────────────────────────────────────────────
+const MC_KEYS = ["ncr", "tal_to_equity", "tal_npl_ratio", "allow_cover", "npl_ratio", "roe_ttm", "debt_ratio", "net_borrow_dep", "fee_share_ttm"];
+const MC_DEF = {
+  ncr: "영업용순자본 ÷ 총위험액 · 규제 150%", tal_to_equity: "신탁계정대 ÷ 자본총계", tal_npl_ratio: "신탁계정대 중 고정·회수의문·추정손실",
+  allow_cover: "대손충당금 ÷ 신탁계정대", npl_ratio: "분류대상 자산 중 고정이하", roe_ttm: "4분기 순이익 ÷ 자본총계",
+  debt_ratio: "부채총계 ÷ 자본총계", net_borrow_dep: "(차입부채 − 현금) ÷ 자산총계", fee_share_ttm: "4분기 신탁보수 ÷ 영업수익" };
+function sparkSVG(vals) {
+  const pts = vals.map((v, i) => [i, v]).filter(p => p[1] !== null);
+  if (pts.length < 2) return "";
+  let lo = Math.min(...pts.map(p => p[1])), hi = Math.max(...pts.map(p => p[1]));
+  if (hi === lo) { hi += 1; lo -= 1 }
+  const W = 400, H = 30, n = vals.length, X = i => (i + .5) / n * W, Y = v => H - 6 - (v - lo) / (hi - lo) * (H - 12);
+  const d = pts.map(([i, v], k) => `${k ? "L" : "M"}${X(i).toFixed(1)},${Y(v).toFixed(1)}`).join("");
+  const dots = pts.map(([i, v], k) => `<path d="M${X(i).toFixed(1)},${Y(v).toFixed(1)}l0,0" style="stroke:var(--accent)" stroke-width="${k === pts.length - 1 ? 7 : 5}" stroke-linecap="round" vector-effect="non-scaling-stroke"/>`).join("");
+  return `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" aria-hidden="true"><path d="${d}" fill="none" style="stroke:var(--accent)" stroke-width="1.6" vector-effect="non-scaling-stroke"/>${dots}</svg>`;
+}
+function renderMetricCards() {
+  const q = S.q, pq = prevQ(q), codes = D.companies.map(c => c.code);
+  const qi = D.quarters.indexOf(q), Q4 = D.quarters.slice(Math.max(0, qi - 3), qi + 1);
+  $("mcards").innerHTML = MC_KEYS.map(k => {
+    const m = M[k], avg = indAvg(k, q), pavg = pq ? indAvg(k, pq) : null;
+    const rows = codes.map(c => ({ c, v: val(c, q, k) })).filter(r => r.v !== null)
+      .sort((a, b) => m.dir === -1 ? a.v - b.v : b.v - a.v);
+    // 막대 눈금: 극단값(사분위 범위 3배 밖)은 끝에서 잘라 빗금으로 표시
+    const sv = rows.map(r => r.v).sort((a, b) => a - b), qt = p => sv[Math.floor(p * (sv.length - 1))];
+    const iqr = qt(.75) - qt(.25), capHi = qt(.75) + 3 * iqr;
+    const top = Math.max(...rows.map(r => r.v).filter(v => iqr <= 0 || v <= capHi), avg ?? 0, k === "ncr" ? 150 : 0, 1e-9);
+    const W = v => Math.max(0, Math.min(v, top)) / top * 100;
+    const myRank = rows.findIndex(r => r.c === MY_CO) + 1;
+    const list = rows.map((r, i) => { const s = m.st ? m.st(r.v) : null, cap = r.v > top;
+      return `<button type="button" class="mr${r.c === MY_CO ? " mine" : ""}" data-c="${r.c}" title="${esc(coName(r.c))} ${fmt(r.v, k)}%">
+        <span class="rk-n">${i + 1}</span><span class="nm">${esc(tag(r.c))}</span>
+        <span class="mb2"><i class="${s || ""}${cap ? " cap" : ""}" style="width:${W(r.v)}%"></i>${avg !== null ? `<u style="left:calc(${W(avg)}% - 1px)"></u>` : ""}${k === "ncr" ? `<s style="left:${W(150)}%"></s>` : ""}</span>
+        <span class="bv ${s && s !== "good" ? "s-" + s : ""}">${fmt(r.v, k)}${m.unit === "%" ? "<small>%</small>" : ""}</span></button>` }).join("");
+    return `<article class="mc" data-k="${k}" aria-current="${S.metric === k}">
+      <button type="button" class="mc-h" data-k="${k}"><div><h3>${m.name}</h3><span class="def1">${MC_DEF[k]}</span></div>
+        <div class="mc-k"><span>업계 합산평균</span><b>${fmt(avg, k)}<small>%</small></b>${deltaHTML(k, avg, pavg)}</div></button>
+      <div class="mc-sp"><div class="sp-t">업계 4분기 추이</div>${sparkSVG(Q4.map(qq => indAvg(k, qq)))}
+        <div class="sp-q" style="grid-template-columns:repeat(${Q4.length},minmax(0,1fr))">${Q4.map((qq, i) => `<div${i === Q4.length - 1 ? ' class="last"' : ""}><span>${qShort(qq)}</span><b>${fmt(indAvg(k, qq), k)}${m.unit === "%" ? "<small>%</small>" : ""}</b></div>`).join("")}</div></div>
+      <div class="mc-list">${list}</div>
+      <div class="mc-f"><span>${m.dir === -1 ? "낮은 순" : "높은 순"} · 검은 세로선 업계${k === "ncr" ? " · 빨간 점선 150%" : ""}</span>${myRank ? `<span>대신 <b>${myRank}위</b>/${rows.length}</span>` : ""}</div>
+    </article>` }).join("");
 }
 
 function renderCards() {
@@ -930,10 +1000,12 @@ function init(data) {
     if (th) { const k = th.dataset.k; S.sortDir = S.sortKey === k ? -S.sortDir : (k === "name" ? 1 : -1); S.sortKey = k; renderSummary(); return }
     const tr = e.target.closest("tr.link"); if (tr) go("company", tr.dataset.c);
   });
-  $("flt").addEventListener("click", e => { const b = e.target.closest("button"); if (b) { S.flt = b.dataset.f; renderCards() } });
-  $("sort-select").addEventListener("change", e => { S.sort = e.target.value; renderCards() });
   const toCo = e => { const b = e.target.closest("[data-c]"); if (b) go("company", b.dataset.c) };
-  $("cards").addEventListener("click", toCo);
+  $("mcards").addEventListener("click", e => {
+    const h = e.target.closest(".mc-h");
+    if (h) { S.metric = h.dataset.k; render(); $("detail").scrollIntoView({ behavior: "smooth", block: "start" }); return }
+    toCo(e);
+  });
   $("hero").addEventListener("click", toCo);
   $("trend-lgd").addEventListener("click", e => { const b = e.target.closest("button"); if (b) { S.focus = S.focus === b.dataset.c ? null : b.dataset.c; renderTrend() } });
   $("out-toggle").addEventListener("click", () => { S.showOut = !S.showOut; renderTrend() });
