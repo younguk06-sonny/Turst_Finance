@@ -56,6 +56,9 @@ TABLES = {
         ("op_income", "C", "영업이익"),
         ("net_income", "G", "당기순이익"),
     ],
+    "SM006": [  # 요약재무상태표(신탁계정) — 자산총계를 수탁고로 사용
+        ("trust_aum", "B", "자산총계"),
+    ],
     "SM009": [  # 자본적정성
         ("nop_capital", "A", "영업용순자본"),
         ("total_risk", "B", "총위험액"),
@@ -314,7 +317,7 @@ def build(col: dict) -> dict:
     return {
         "meta": {
             "source": "금융감독원 금융통계정보시스템(FISIS) 오픈API",
-            "tables": ["SM005", "SM007", "SM009", "SM013", "SM016"],
+            "tables": ["SM005", "SM006", "SM007", "SM009", "SM013", "SM016"],
             "basis": "고유계정 기준 · 금액 억원 · 비율 %",
             "generated_at": dt.datetime.now(dt.timezone(dt.timedelta(hours=9))).isoformat(timespec="seconds"),
             "latest": quarters[-1] if quarters else None,
