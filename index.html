@@ -117,6 +117,10 @@ select { background: var(--surface); border: 1px solid var(--line); border-radiu
   linear-gradient(140deg, var(--sea1), var(--sea2)) }
 .pn.sea h3 { color: var(--on-sea-mu) }
 .pn.donut { grid-column: span 3 }
+/* 업계 신탁계정대 잔액: 일반 흰 카드 */
+.pn.total { grid-column: span 3 }
+.pn.total .delta { color: var(--muted) }
+.pn.total .share { background: var(--sunk) }
 .pn.ta { background: linear-gradient(165deg, var(--tint-a), var(--surface) 60%) }
 .pn.tb { background: linear-gradient(165deg, var(--tint-b), var(--surface) 60%) }
 .pn.tc { background: linear-gradient(165deg, var(--tint-c), var(--surface) 60%) }
@@ -130,6 +134,8 @@ select { background: var(--surface); border: 1px solid var(--line); border-radiu
 .lg > button { cursor: pointer } .lg > button:hover b { text-decoration: underline }
 .lg b { margin-left: auto; font-family: var(--f-num); font-weight: 500 }
 .lg u { text-decoration: none; opacity: .72; width: 48px; text-align: right; font-family: var(--f-num); font-size: 11.5px }
+.lg .sn { display: none }
+.lg .fn, .lg .sn { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0 }
 .dt { width: 9px; height: 9px; border-radius: 3px; flex: none }
 .dn { display: flex; align-items: center; gap: 16px }
 .dn svg { width: 136px; height: 136px; flex: none }
@@ -158,6 +164,30 @@ select { background: var(--surface); border: 1px solid var(--line); border-radiu
 .ind b { font-family: var(--f-num); font-size: 19px; font-weight: 500; letter-spacing: -.02em }
 .ind em { font-style: normal; font-family: var(--f-num); font-size: 11.5px }
 
+/* 핵심 지표 6개 */
+.keys { display: grid; gap: 10px; grid-template-columns: repeat(6, minmax(0, 1fr)) }
+.key { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 12px 12px 10px; box-shadow: var(--shadow);
+  display: flex; flex-direction: column; gap: 2px; text-align: left; min-width: 0; cursor: pointer; position: relative; overflow: hidden }
+.key::before { content: ""; position: absolute; inset: 0 0 auto 0; height: 3px; background: linear-gradient(90deg, var(--sea1), var(--sea2)) }
+.key:hover { border-color: var(--accent) }
+.key .kt { font-size: 12.5px; font-weight: 700; line-height: 1.3 }
+.key .kt span { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 10.5px; font-weight: 400; color: var(--muted) }
+.key .kv { font-family: var(--f-num); font-size: 22px; font-weight: 500; letter-spacing: -.03em; line-height: 1.2; margin-top: 4px; white-space: nowrap }
+.key .kv small { font-family: var(--f-body); font-size: 11.5px; color: var(--muted); margin-left: 2px; font-weight: 400 }
+.key .kd { font-family: var(--f-num); font-size: 11px; color: var(--muted) }
+.key svg { display: block; width: 100%; height: 26px; margin-top: 4px }
+.key .kq { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); text-align: center; font-family: var(--f-num); font-size: 9.5px; color: var(--muted) }
+.key .kq b { display: block; font-size: 10px; font-weight: 500; color: var(--fg); letter-spacing: -.03em; white-space: nowrap }
+.key .kq .last b { color: var(--accent); font-weight: 700 }
+.key .km { display: flex; align-items: baseline; gap: 6px; margin-top: 6px; padding: 5px 7px; border-radius: 8px; background: var(--mine-bg); box-shadow: inset 0 0 0 1px var(--mine-line); font-size: 11px }
+.key .km b { font-family: var(--f-num); font-weight: 700; margin-left: auto; white-space: nowrap }
+.key .km em { font-style: normal; font-family: var(--f-num); color: var(--muted); white-space: nowrap }
+.key.pending { cursor: default; background: var(--sunk); border-style: dashed; box-shadow: none }
+.key.pending::before { background: var(--line) }
+.key.pending .kv { color: var(--muted) }
+.key.pending .kn { font-size: 11px; color: var(--muted); margin-top: 6px; line-height: 1.45 }
+@media (max-width: 1100px) { .keys { grid-template-columns: repeat(3, minmax(0, 1fr)) } }
+@media (max-width: 600px) { .keys { grid-template-columns: repeat(2, minmax(0, 1fr)) } .key .kv { font-size: 19px } }
 /* 지표별 카드 */
 .mcards { display: grid; gap: 12px; grid-template-columns: repeat(3, minmax(0, 1fr)) }
 .mc { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 14px 14px 10px; box-shadow: var(--shadow); min-width: 0; display: flex; flex-direction: column }
@@ -171,10 +201,17 @@ select { background: var(--surface); border: 1px solid var(--line); border-radiu
 .mc-k b { font-family: var(--f-num); font-size: 22px; font-weight: 500; letter-spacing: -.02em; line-height: 1.15 }
 .mc-k b small { font-size: 12px; color: var(--muted); margin-left: 1px }
 .mc-k em { display: block; font-style: normal; font-family: var(--f-num); font-size: 11px }
+.mc-c { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; gap: 6px; margin-top: 10px }
+.mc-c > div { border: 1px solid var(--line); border-radius: 9px; padding: 6px 9px; min-width: 0 }
+.mc-c span { display: block; font-size: 10.5px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis }
+.mc-c b { font-family: var(--f-num); font-size: 14px; font-weight: 500; white-space: nowrap }
+.mc-c b small { font-family: var(--f-body); font-size: 10px; color: var(--muted); margin-left: 2px; font-weight: 400 }
+.mc-c > i { font-style: normal; color: var(--muted); font-size: 14px }
 .mc-sp { margin: 10px 0 8px; padding: 8px 8px 6px; background: var(--sunk); border-radius: 10px }
 .mc-sp .sp-t { font-size: 11px; color: var(--muted); margin-bottom: 2px }
 .mc-sp svg { display: block; width: 100%; height: 30px }
 .sp-q { display: grid; text-align: center; margin-top: 2px }
+.sp-q em { font-style: normal } .sp-q .qs { display: none }
 .sp-q span { display: block; font-size: 10px; color: var(--muted); font-family: var(--f-num) }
 .sp-q b { font-family: var(--f-num); font-size: 12px; font-weight: 500 }
 .sp-q b small, .mr .bv small { font-size: .82em; margin-left: 1px; opacity: .75 }
@@ -194,8 +231,38 @@ select { background: var(--surface); border: 1px solid var(--line); border-radiu
 .mb2 s { position: absolute; top: -3px; bottom: -3px; width: 0; border-left: 1.5px dashed var(--bad) }
 .mc-f { display: flex; justify-content: space-between; gap: 8px; margin-top: auto; padding-top: 8px; font-size: 11px; color: var(--muted) }
 .mc-f b { color: var(--fg) }
-@media (max-width: 980px) { .mcards { grid-template-columns: repeat(2, minmax(0, 1fr)) } }
-@media (max-width: 600px) { .mcards { grid-template-columns: minmax(0, 1fr) } }
+
+/* 지표별 현황: 어느 폭에서나 한 줄 3칸 (좁은 화면은 내용을 촘촘하게) */
+@media (max-width: 980px) {
+  .mcards { gap: 8px }
+  .mc { padding: 10px 9px 8px }
+  .mc-h { flex-direction: column; gap: 4px }
+  .mc-k { text-align: left }
+  .mc-c { grid-template-columns: minmax(0, 1fr); gap: 3px }
+  .mc-c > i { display: none }
+  .mc-c > div { padding: 4px 7px }
+  .mc-c b { font-size: 12.5px }
+}
+@media (max-width: 600px) {
+  .mcards { gap: 6px; margin-inline: -6px }
+  .mc { padding: 8px 6px 6px; border-radius: 11px }
+  .mc-h h3 { font-size: 11.5px; line-height: 1.25 }
+  .mc-h .def1 { display: none }
+  .mc-k span { font-size: 9px } .mc-k b { font-size: 15px } .mc-k em { font-size: 9.5px }
+  .mc-c span { font-size: 8.5px; white-space: normal; line-height: 1.2 } .mc-c b { font-size: 11px } .mc-c b small { display: none }
+  .mc-c > div { padding: 3px 5px; border-radius: 6px }
+  .mc-sp { padding: 5px 4px 4px; margin: 6px 0 4px }
+  .mc-sp .sp-t { font-size: 9px }
+  .mc-sp svg { height: 20px }
+  .sp-q span { font-size: 8px } .sp-q .qf { display: none } .sp-q .qs { display: inline }
+  .sp-q b { font-size: 8px; letter-spacing: -.04em } .sp-q b small { display: none }
+  .mr { grid-template-columns: minmax(0, 1fr) auto; grid-template-rows: auto 3px; gap: 1px 4px; padding: 2px 3px; font-size: 10px }
+  .mr .rk-n { display: none }
+  .mr .mb2 { grid-column: 1 / -1; grid-row: 2; height: 3px }
+  .mr .mb2 u, .mr .mb2 s { top: -1px; bottom: -1px }
+  .mr .bv small { display: none }
+  .mc-f { flex-direction: column; gap: 1px; font-size: 8.5px }
+}
 /* 신탁사 카드 */
 .cards { display: grid; gap: 12px; grid-template-columns: repeat(3, minmax(0, 1fr)) }
 .co { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 14px; box-shadow: var(--shadow); cursor: pointer; text-align: left; display: block; width: 100%; position: relative; overflow: hidden }
@@ -280,6 +347,7 @@ tr.grp + tr td { border-top: 0 }
 /* 신탁계정대 고정이하%: 원래 글자 크기·자간으로 두 줄 표시 */
 #t-sum thead th.wrap2 { white-space: normal; word-break: keep-all; letter-spacing: 0; line-height: 1.3 }
 /* 대신자산신탁 행: 굵은 글씨 + 연한 노란 바탕 */
+#t-sum td small.u { font-size: .82em; margin-left: 1px; opacity: .75 }
 #t-sum tr.mine td { background: var(--mine-bg); font-weight: 700; border-top: 1px solid var(--mine-line); border-bottom: 1px solid var(--mine-line) }
 #t-sum tr.mine:hover td { background: var(--mine-bg) }
 #t-sum tr.avg td { background: var(--accent-soft); color: var(--accent); font-weight: 700;
@@ -293,11 +361,29 @@ footer p { margin: 0 }
 @media (max-width: 980px) {
   .hero, .co-hero { grid-template-columns: repeat(2, minmax(0, 1fr)) }
   .hero > .pn, .hero > .pn.sea, .hero > .pn.donut, .co-hero .pn.sea, .co-hero .pn.donut { grid-column: auto }
-  .hero > .pn.sea, .co-hero .pn.sea { grid-column: 1 / -1 }
+  .co-hero .pn.sea { grid-column: 1 / -1 }
   .cards { grid-template-columns: repeat(2, minmax(0, 1fr)) }
 }
 @media (max-width: 600px) {
-  .hero, .co-hero, .cards { grid-template-columns: minmax(0, 1fr) }
+  .co-hero, .cards { grid-template-columns: minmax(0, 1fr) }
+  /* 업계 한눈에 보기 두 패널은 휴대폰에서도 한 줄에 나란히 */
+  .hero .fn { display: none } .hero .sn { display: inline }
+  .hero { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px }
+  .hero .pn { padding: 11px 10px; border-radius: 14px }
+  .hero .pn h3 { font-size: 11px; margin-bottom: 4px }
+  .hero .pn h3 .n { display: none }
+  .hero .big { font-size: 21px }
+  .hero .big small { font-size: 11px }
+  .hero .delta { font-size: 10px }
+  .hero .share { height: 8px; margin: 9px 0 6px }
+  .hero .lg > button, .hero .lg > div { font-size: 10.5px; gap: 5px; padding: 1.5px 0 }
+  .hero .lg u { width: 36px; font-size: 9.5px }
+  .hero .dt { width: 7px; height: 7px }
+  .hero .dn { flex-direction: column; align-items: stretch; gap: 6px }
+  .hero .dn svg { width: 92px; height: 92px; align-self: center }
+  .hero .mini { grid-template-columns: minmax(0, 1fr); gap: 4px; margin-top: 8px }
+  .hero .mini > div { padding: 4px 7px; display: flex; justify-content: space-between; align-items: baseline; gap: 6px }
+  .hero .mini span { font-size: 10px } .hero .mini b { font-size: 12px }
   .big { font-size: 30px }
   .dn svg { width: 112px; height: 112px }
 }
@@ -329,26 +415,21 @@ footer p { margin: 0 }
       <div class="bar"><label for="q-select">기준 분기</label><select id="q-select"></select></div>
     </div>
 
+    <div class="keys" id="keys" aria-label="핵심 지표"></div>
+
     <div class="hero" id="hero">
-      <div class="pn sea" id="hp-total"></div>
+      <div class="pn total" id="hp-total"></div>
       <div class="pn donut" id="hp-grade"></div>
     </div>
 
-    <div class="ind" id="ind"></div>
 
     <div class="sec-title"><h2>지표별 현황</h2><span id="mx-sub">지표마다 업계 합산평균과 14개사 순위입니다. 카드를 누르면 아래에서 자세히 봅니다.</span></div>
     <div class="mcards" id="mcards"></div>
 
-    <div class="sec-title" id="detail"><h2>지표 상세</h2><span>지표를 고르면 순위와 최근 4분기 추이가 바뀝니다</span></div>
+    <div class="sec-title" id="detail"><h2>지표 상세</h2><span>지표를 고르면 순위가 바뀝니다</span></div>
     <div class="chips" id="metric-chips" role="group" aria-label="지표 선택"></div>
     <div class="grid2">
       <div class="card"><h2 id="rank-title">순위</h2><p class="sub" id="rank-sub"></p><div class="chart" id="rank-box"><canvas id="c-rank"></canvas></div></div>
-      <div class="card">
-        <div class="card-head"><div><h2 id="trend-title">최근 4분기 추이</h2><p class="sub" id="trend-sub">점선은 업계 합산평균입니다. 아래에서 신탁사를 누르면 그 선만 강조됩니다.</p></div>
-          <button type="button" class="toggle" id="out-toggle" hidden></button></div>
-        <div class="chart" style="height:360px"><canvas id="c-trend"></canvas></div>
-        <div class="lgd" id="trend-lgd" role="group" aria-label="신탁사 강조"></div>
-      </div>
     </div>
     <div class="card">
       <h2>전사 요약</h2><p class="sub" id="sum-sub">열 제목을 누르면 정렬, 행을 누르면 해당 신탁사로 이동합니다.</p>
@@ -429,10 +510,12 @@ const M = {
   total_assets:   { name: "자산총계", short: "자산총계", unit: "억원", dir: 0, d: 0, def: "고유계정 자산총계." },
   total_equity:   { name: "자본총계", short: "자본총계", unit: "억원", dir: 1, d: 0, def: "고유계정 자본총계." },
   trust_loan:     { name: "신탁계정대", short: "신탁계정대", unit: "억원", dir: -1, d: 0, def: "고유계정에서 신탁계정으로 빌려준 자금." },
+  trust_aum:      { name: "수탁고", short: "수탁고", unit: "억원", dir: 1, d: 0, def: "신탁계정 요약재무상태표(SM006)의 자산총계. 금감원 보도자료의 수탁고(신탁원본 기준)와 다를 수 있습니다." },
+  net_income:     { name: "당기순이익(분기)", short: "순이익(분기)", unit: "억원", dir: 1, d: 0, def: "해당 분기에 발생한 당기순이익(누적 아님)." },
   net_income_ttm: { name: "당기순이익(최근 4분기)", short: "순이익 4Q", unit: "억원", dir: 1, d: 0, def: "최근 4개 분기 당기순이익 합계." },
   op_revenue_ttm: { name: "영업수익(최근 4분기)", short: "영업수익 4Q", unit: "억원", dir: 1, d: 0, def: "최근 4개 분기 영업수익 합계." },
 };
-const COMPARE = ["ncr","tal_to_equity","tal_npl_ratio","roe_ttm","debt_ratio","net_borrow_dep","npl_ratio","allow_cover","fee_share_ttm","total_assets","total_equity","trust_loan"];
+const COMPARE = ["ncr","tal_to_equity","tal_npl_ratio","roe_ttm","debt_ratio","net_borrow_dep","npl_ratio","allow_cover","fee_share_ttm","total_assets","total_equity","trust_loan","trust_aum"];
 const KPI = ["ncr","tal_to_equity","tal_npl_ratio","allow_cover","roe_ttm","debt_ratio","net_borrow_dep","fee_share_ttm"];
 const SUM_COLS = ["total_assets","total_equity","trust_loan","tal_to_equity","tal_npl_ratio","ncr","roe_ttm","debt_ratio","net_income_ttm"];
 const RAW_ROWS = [
@@ -447,6 +530,8 @@ const RAW_ROWS = [
   ["파생 지표", null],
   ["부채비율 (%)","debt_ratio"],["신탁계정대/자기자본 (%)","tal_to_equity"],["충당금적립률 (%)","allow_cover"],
   ["순차입금의존도 (%)","net_borrow_dep"],["ROA 4Q (%)","roa_ttm"],["ROE 4Q (%)","roe_ttm"],["신탁보수 비중 4Q (%)","fee_share_ttm"],
+  ["신탁계정", null],
+  ["수탁고(신탁계정 자산총계)","trust_aum"],
 ];
 
 // ── 상태 ─────────────────────────────────────────────────────────────
@@ -480,6 +565,21 @@ const AGG = {
   net_borrow_dep: [d => d.borrowings == null || d.cash == null ? null : d.borrowings - d.cash, d => d.total_assets],
   fee_share_ttm:  [d => d.trust_fee_ttm, d => d.op_revenue_ttm],
 };
+// 합산평균의 분자·분모 이름
+const AGG_LBL = {
+  ncr: ["영업용순자본", "총위험액"], tal_to_equity: ["신탁계정대 잔액", "자본총계"],
+  tal_npl_ratio: ["신탁계정대 고정이하", "신탁계정대 분류합계"], allow_cover: ["대손충당금", "신탁계정대 잔액"],
+  npl_ratio: ["고정이하자산", "분류대상자산"], roe_ttm: ["순이익(최근 4분기)", "자본총계"], roa_ttm: ["순이익(최근 4분기)", "자산총계"],
+  debt_ratio: ["부채총계", "자본총계"], net_borrow_dep: ["순차입금(차입부채−현금)", "자산총계"],
+  fee_share_ttm: ["신탁보수(최근 4분기)", "영업수익(최근 4분기)"] };
+// 업계 분자 합계·분모 합계 (indAvg와 같은 회사 집합)
+function aggSums(k, q) {
+  const [fn, fd] = AGG[k]; let n = 0, d = 0, cnt = 0;
+  D.companies.forEach(c => { const r = D.series[c.code]?.[q]; if (!r) return;
+    const a = fn(r), b = fd(r); if (a == null || b == null || !b) return; n += a; d += b; cnt++ });
+  return cnt ? [n, d] : [null, null];
+}
+function compVals(k, c, q) { const r = D.series[c]?.[q]; if (!r || !AGG[k]) return [null, null]; return [AGG[k][0](r), AGG[k][1](r)] }
 function indAvg(k, q) {
   const codes = D.companies.map(c => c.code);
   if (AGG[k]) {
@@ -549,7 +649,6 @@ function renderCompare() {
     }),
     plugins: [refLine(m.unit === "%" && k === "ncr" ? 150 : null, "x", t.bad, "150%")],
   });
-  renderTrend();
   renderSummary();
 }
 
@@ -560,81 +659,7 @@ const coColor = c => CO_COLORS[D.companies.findIndex(x => x.code === c) % CO_COL
 const tag = c => coName(c).replace(/(부동산신탁|자산신탁|신탁)$/, "") || coName(c);
 const alpha = (hex, a) => hex + Math.round(a * 255).toString(16).padStart(2, "0");
 
-function renderTrend() {
-  const t = theme(), k = S.metric, m = M[k], codes = D.companies.map(c => c.code);
-  const qi = D.quarters.indexOf(S.q), Q4 = D.quarters.slice(Math.max(0, qi - 3), qi + 1);
-  $("trend-title").textContent = `${m.short} 최근 4분기 추이`;
-  // 극단값: 4개 분기 값 전체의 사분위 범위 밖 3배 이상 벗어난 회사는 축 범위 계산에서 뺌
-  const all = codes.flatMap(c => Q4.map(q => val(c, q, k))).filter(v => v !== null).sort((a, b) => a - b);
-  const qt = p => all.length ? all[Math.min(all.length - 1, Math.floor(p * (all.length - 1)))] : 0;
-  const q1 = qt(.25), q3 = qt(.75), iqr = q3 - q1, lo = q1 - 3 * iqr, hi = q3 + 3 * iqr;
-  const outs = iqr > 0 ? codes.filter(c => Q4.some(q => { const v = val(c, q, k); return v !== null && (v < lo || v > hi) })) : [];
-  const btn = $("out-toggle");
-  btn.hidden = !outs.length;
-  btn.textContent = S.showOut ? "극단값 빼고 보기" : `극단값 포함 (${outs.map(tag).join("·")})`;
-  let yMin, yMax;
-  if (outs.length && !S.showOut) {
-    const inn = codes.filter(c => !outs.includes(c)).flatMap(c => Q4.map(q => val(c, q, k)))
-      .concat(Q4.map(q => indAvg(k, q))).filter(v => v !== null);
-    const a = Math.min(...inn), b = Math.max(...inn), pad = (b - a) * .08 || 1;
-    yMin = a - pad; yMax = b + pad;
-  }
-  $("trend-sub").textContent = outs.length && !S.showOut
-    ? `점선은 업계 합산평균입니다. ${outs.map(tag).join("·")}은 값이 커서 축에서 빼고 이름표에 값만 표시했습니다.`
-    : "점선은 업계 합산평균입니다. 아래에서 신탁사를 누르면 그 선만 강조됩니다.";
-  const f = S.focus;
-  const ds = codes.map(c => { const col = coColor(c), dim = f && f !== c;
-    return { label: coName(c), code: c, data: Q4.map(q => val(c, q, k)), borderColor: dim ? alpha(col, .14) : col, backgroundColor: dim ? alpha(col, .14) : col,
-      borderWidth: f === c ? 3.2 : 1.8, pointRadius: dim ? 0 : 2.5, pointHoverRadius: 4, tension: .2, spanGaps: true, order: f === c ? -2 : 0 } });
-  ds.push({ label: "업계 합산평균", code: "_ind", data: Q4.map(q => indAvg(k, q)), borderColor: t.fg, backgroundColor: t.fg,
-    borderWidth: 2.2, borderDash: [6, 4], pointRadius: 0, tension: .2, order: -1 });
-  const narrow = $("c-trend").clientWidth < 520;
-  draw("c-trend", { type: "line", data: { labels: Q4.map(q => q.replace("Q", ".") + "Q"), datasets: ds },
-    options: baseOpts(t, {
-      layout: { padding: { right: narrow ? 58 : 84, top: 6 } },
-      interaction: { mode: "nearest", intersect: false, axis: "xy" },
-      onClick: (e, els) => { if (els.length) { const c = ds[els[0].datasetIndex].code; if (c !== "_ind") { S.focus = S.focus === c ? null : c; renderTrend() } } },
-      plugins: { legend: { display: false }, tooltip: { ...baseOpts(t).plugins.tooltip, mode: "nearest", intersect: false,
-        callbacks: { label: c => ` ${c.dataset.label}: ${fmt(c.raw, k)}${m.unit === "%" ? "%" : "억원"}` } } },
-      scales: { x: { ...baseOpts(t).scales.x, offset: true },
-        y: { ...baseOpts(t).scales.y, min: yMin, max: yMax } } }),
-    plugins: [refLine(k === "ncr" ? 150 : null, "y", t.bad), endLabels(k, m, t, narrow)] });
-  $("trend-lgd").className = "lgd" + (f ? " focusing" : "");
-  $("trend-lgd").innerHTML = codes.map(c => `<button type="button" data-c="${c}" aria-pressed="${f === c}"><i style="background:${coColor(c)}"></i>${esc(tag(c))}</button>`).join("");
-}
 
-// 선 끝에 회사 이름표. 겹치면 위아래로 밀어내고 원래 위치까지 가는 짧은 연결선을 그림
-function endLabels(k, m, t, narrow) {
-  return { id: "endLabels", afterDatasetsDraw(ch) {
-    const g = ch.ctx, a = ch.chartArea, ys = ch.scales.y, gap = 12.5;
-    const items = [];
-    ch.data.datasets.forEach((d, i) => {
-      const meta = ch.getDatasetMeta(i); let j = d.data.length - 1;
-      while (j >= 0 && (d.data[j] === null || d.data[j] === undefined)) j--;
-      if (j < 0) return;
-      const v = d.data[j], px = meta.data[j].x, out = v > ys.max ? 1 : v < ys.min ? -1 : 0;
-      const py = out > 0 ? a.top : out < 0 ? a.bottom : meta.data[j].y;
-      const isInd = d.code === "_ind", dim = S.focus && S.focus !== d.code && !isInd;
-      items.push({ y: py, py, px, text: (isInd ? "업계" : tag(d.code)) + (out ? ` ${out > 0 ? "↑" : "↓"}${fmt(v, k)}` : ""),
-        color: isInd ? t.fg : coColor(d.code), dim, bold: S.focus === d.code || isInd });
-    });
-    items.sort((p, q) => p.y - q.y);
-    // 위에서 아래로 밀고, 아래 끝을 넘으면 아래에서 위로 다시 밀어 차트 높이 안에 맞춤
-    const top = a.top + 2, bot = a.bottom + 2;
-    items.forEach((it, i) => { it.y = Math.max(it.y, top, i ? items[i - 1].y + gap : top) });
-    for (let i = items.length - 1; i >= 0; i--) items[i].y = Math.min(items[i].y, i < items.length - 1 ? items[i + 1].y - gap : bot);
-    g.save(); g.textBaseline = "middle";
-    const lx = a.right + 8;
-    items.forEach(it => {
-      g.globalAlpha = it.dim ? .3 : 1;
-      g.strokeStyle = it.color; g.lineWidth = 1;
-      g.beginPath(); g.moveTo(it.px + 4, it.py); g.lineTo(lx - 2, it.y); g.stroke();
-      g.fillStyle = it.color; g.font = `${it.bold ? 700 : 500} ${narrow ? 10 : 11}px ${css("--f-body")}`;
-      g.fillText(it.text, lx, it.y);
-    });
-    g.restore();
-  } };
-}
 
 // 열 제목이 칸보다 길면 한 줄에 딱 맞을 때까지 그 제목만 글자를 줄임(최소 9px)
 function fitHeads(tbl) {
@@ -645,6 +670,9 @@ function fitHeads(tbl) {
   });
 }
 
+// 비율 지표 값 뒤에 작은 % 표시
+const pct = (k, v) => M[k]?.unit === "%" && v !== null && v !== undefined ? '<small class="u">%</small>' : "";
+
 function renderSummary() {
   const q = S.q, codes = D.companies.map(c => c.code);
   const rows = codes.map(c => ({ c, ...Object.fromEntries(SUM_COLS.map(k => [k, val(c, q, k)])) }));
@@ -653,7 +681,7 @@ function renderSummary() {
                                      : ((a[sk] ?? -Infinity) - (b[sk] ?? -Infinity)) * S.sortDir);
   const th = (k, label) => `<th class="sort${k === "tal_npl_ratio" ? " wrap2" : ""}" data-k="${k}" ${sk === k ? `aria-sort="${S.sortDir > 0 ? "ascending" : "descending"}"` : ""}>${label}${sk === k ? (S.sortDir > 0 ? " ▲" : " ▼") : ""}</th>`;
   const cell = (k, v) => { const s = M[k]?.st && v !== null ? M[k].st(v) : null;
-    return `<td class="num"><span class="${s && s !== "good" ? "s-" + s : ""}">${fmt(v, k)}</span></td>` };
+    return `<td class="num"><span class="${s && s !== "good" ? "s-" + s : ""}">${fmt(v, k)}${pct(k, v)}</span></td>` };
   const meds = SUM_COLS.map(k => indAvg(k, q));
   const tbl = $("t-sum");
   tbl.className = "even";
@@ -662,7 +690,7 @@ function renderSummary() {
     `<colgroup><col class="name">${SUM_COLS.map(() => "<col>").join("")}</colgroup>
      <thead><tr>${th("name", "신탁사")}${SUM_COLS.map(k => th(k, M[k].short + (M[k].unit === "%" ? "%" : ""))).join("")}</tr></thead>
      <tbody>${rows.map(r => `<tr class="link${r.c === MY_CO ? " mine" : ""}" data-c="${r.c}" tabindex="0"><td>${coName(r.c)}</td>${SUM_COLS.map(k => cell(k, r[k])).join("")}</tr>`).join("")}
-     <tr class="avg"><td>업계 합산평균</td>${meds.map((v, i) => `<td class="num">${fmt(v, SUM_COLS[i])}</td>`).join("")}</tr></tbody>`;
+     <tr class="avg"><td>업계 합산평균</td>${meds.map((v, i) => `<td class="num">${fmt(v, SUM_COLS[i])}${pct(SUM_COLS[i], v)}</td>`).join("")}</tr></tbody>`;
   fitHeads(tbl);
   $("sum-sub").textContent = `${qLabel(q)} 기준 · 금액 억원 · 열 제목을 누르면 정렬, 행을 누르면 해당 신탁사로 이동합니다.`;
 }
@@ -721,9 +749,9 @@ function renderOverview() {
   $("hp-total").innerHTML = `<h3><span>업계 신탁계정대 잔액</span><span class="n">${qShort(q)}</span></h3>
     <div class="big">${eok(tl)}<small>억원</small></div>
     <div class="delta">${tlp ? `전분기 대비 ${tl - tlp >= 0 ? "+" : ""}${eok(tl - tlp)}억원 (${((tl / tlp - 1) * 100).toFixed(1)}%)` : ""}</div>
-    <div class="share">${top.map((r, i) => `<i style="width:${r.v / tl * 100}%;background:rgba(255,255,255,${shades[i]})"></i>`).join("")}<i style="width:${rest / tl * 100}%;background:rgba(255,255,255,${restA})"></i></div>
-    <div class="lg">${top.map((r, i) => `<button type="button" data-c="${r.c}"><span class="dt" style="background:rgba(255,255,255,${shades[i]})"></span>${esc(coName(r.c))}<b>${eok(r.v)}</b><u>${pctOf(r.v)}</u></button>`).join("")}
-      <div><span class="dt" style="background:rgba(255,255,255,${restA})"></span>기타 ${byCo.length - 5}개사<b>${eok(rest)}</b><u>${pctOf(rest)}</u></div></div>`;
+    <div class="share">${top.map((r, i) => `<i style="width:${r.v / tl * 100}%;background:color-mix(in srgb, var(--accent) ${Math.round(shades[i] * 100)}%, var(--sunk))"></i>`).join("")}<i style="width:${rest / tl * 100}%;background:color-mix(in srgb, var(--accent) ${Math.round(restA * 100)}%, var(--sunk))"></i></div>
+    <div class="lg">${top.map((r, i) => `<button type="button" data-c="${r.c}"><span class="dt" style="background:color-mix(in srgb, var(--accent) ${Math.round(shades[i] * 100)}%, var(--sunk))"></span><span class="fn">${esc(coName(r.c))}</span><span class="sn">${esc(tag(r.c))}</span><b>${eok(r.v)}</b><u>${pctOf(r.v)}</u></button>`).join("")}
+      <div><span class="dt" style="background:color-mix(in srgb, var(--accent) ${Math.round(restA * 100)}%, var(--sunk))"></span>기타 ${byCo.length - 5}개사<b>${eok(rest)}</b><u>${pctOf(rest)}</u></div></div>`;
 
   // ② 신탁계정대 건전성 분류 (업계 합계)
   const g = [0, 0, 0, 0, 0];
@@ -737,12 +765,50 @@ function renderOverview() {
       <div><span>충당금 / 고정이하</span><b>${g[2] + g[3] + g[4] ? (Math.abs(sum("trust_loan_allow", q) ?? 0) / (g[2] + g[3] + g[4]) * 100).toFixed(1) + "%" : "–"}</b></div>
     </div>`;
 
-  // 업계 합산평균 띠
-  const IND = ["ncr", "tal_to_equity", "tal_npl_ratio", "allow_cover", "roe_ttm", "debt_ratio"];
-  $("ind").innerHTML = IND.map(k => { const v = indAvg(k, q), p = pq ? indAvg(k, pq) : null;
-    return `<div><span>업계 ${M[k].short}</span><b>${fmt(v, k)}<small style="font-size:12px;color:var(--muted)">%</small></b>${deltaHTML(k, v, p)}</div>` }).join("");
-
+  renderKeys();
   renderMetricCards();
+}
+
+// ── 핵심 지표 6개 (언론 보도 기준) ───────────────────────────────────
+// agg: "avg" = 업계 합산평균(가중), "sum" = 업계 합계
+const KEYS = [
+  { k: "ncr", name: "영업용순자본비율(NCR)", agg: "avg", unit: "%", dir: 1, ref: 150 },
+  { k: "debt_ratio", name: "부채비율", agg: "avg", unit: "%", dir: -1 },
+  { k: "trust_loan", name: "신탁계정대 잔액", agg: "sum", unit: "억원", dir: -1 },
+  { k: "tal_to_equity", name: "신탁계정대 / 자기자본", agg: "avg", unit: "%", dir: -1 },
+  { k: "net_income", name: "당기순이익(분기)", agg: "sum", unit: "억원", dir: 1 },
+  { k: "trust_aum", name: "수탁고", agg: "sum", unit: "조원", div: 1e4, dir: 1, sub: "업계 합계 · 신탁계정 기준" },
+];
+function keyVal(key, q) {
+  if (key.agg === "avg") return indAvg(key.k, q);
+  const v = D.companies.map(c => val(c.code, q, key.k)).filter(x => x !== null);
+  return v.length ? v.reduce((a, b) => a + b, 0) : null;
+}
+const kfmt = (key, v) => v === null || v === undefined ? "–" : key.unit === "%" ? fmt(v, key.k)
+  : key.div ? (v / key.div).toLocaleString("ko-KR", { minimumFractionDigits: 1, maximumFractionDigits: 1 }) : eok(v);
+const kunit = key => key.unit === "%" ? "%" : key.unit.replace("원", "");
+function renderKeys() {
+  const q = S.q, pq = prevQ(q), qi = D.quarters.indexOf(q), Q4 = D.quarters.slice(Math.max(0, qi - 3), qi + 1);
+  $("keys").innerHTML = KEYS.map(key => {
+    if (key.pending) return `<div class="key pending"><div class="kt">${key.name}</div><div class="kv">–</div>
+      <div class="kn">FISIS 오픈API에서 제공되지 않아 연결 방법을 정하는 중입니다</div></div>`;
+    const v = keyVal(key, q), p = pq ? keyVal(key, pq) : null;
+    const dv = v !== null && p !== null ? v - p : null;
+    const good = dv === null || dv === 0 ? "" : dv * key.dir > 0 ? "up" : "dn-c";
+    const dtxt = dv === null ? "전분기 –" : key.unit === "%" ? `${dv >= 0 ? "▲" : "▼"} ${fmt(Math.abs(dv), key.k)}%p`
+      : `${dv >= 0 ? "▲" : "▼"} ${kfmt(key, Math.abs(dv))}${kunit(key)}${p > 0 && v > 0 ? ` (${((v / p - 1) * 100).toFixed(1)}%)` : ` (전분기 ${kfmt(key, p)}${kunit(key)})`}`;
+    const mine = val(MY_CO, q, key.k);
+    const rows = D.companies.map(c => ({ c: c.code, v: val(c.code, q, key.k) })).filter(r => r.v !== null)
+      .sort((a, b) => key.dir === -1 ? a.v - b.v : b.v - a.v);
+    const rk = rows.findIndex(r => r.c === MY_CO) + 1;
+    return `<button type="button" class="key" data-k="${key.k}">
+      <div class="kt">${key.name}<span>${key.sub || (key.agg === "avg" ? "업계 합산평균" : "업계 합계")}</span></div>
+      <div class="kv">${kfmt(key, v)}<small>${key.unit}</small></div>
+      <div class="kd ${good}">${dtxt}</div>
+      ${sparkSVG(Q4.map(qq => keyVal(key, qq)))}
+      <div class="kq">${Q4.map((qq, i) => `<span${i === Q4.length - 1 ? ' class="last"' : ""}><b>${kfmt(key, keyVal(key, qq))}</b>${qShort(qq)}</span>`).join("")}</div>
+      <div class="km"><span>대신</span><b>${kfmt(key, mine)}${kunit(key)}</b></div>
+    </button>` }).join("");
 }
 
 // ── 지표별 현황 카드 ─────────────────────────────────────────────────
@@ -775,15 +841,20 @@ function renderMetricCards() {
     const W = v => Math.max(0, Math.min(v, top)) / top * 100;
     const myRank = rows.findIndex(r => r.c === MY_CO) + 1;
     const list = rows.map((r, i) => { const s = m.st ? m.st(r.v) : null, cap = r.v > top;
-      return `<button type="button" class="mr${r.c === MY_CO ? " mine" : ""}" data-c="${r.c}" title="${esc(coName(r.c))} ${fmt(r.v, k)}%">
+      const [cn, cd] = compVals(k, r.c, q);
+      const tip = `${coName(r.c)} ${fmt(r.v, k)}%` + (AGG_LBL[k] ? ` = ${AGG_LBL[k][0]} ${eok(cn)}억 ÷ ${AGG_LBL[k][1]} ${eok(cd)}억` : "");
+      return `<button type="button" class="mr${r.c === MY_CO ? " mine" : ""}" data-c="${r.c}" title="${esc(tip)}">
         <span class="rk-n">${i + 1}</span><span class="nm">${esc(tag(r.c))}</span>
         <span class="mb2"><i class="${s || ""}${cap ? " cap" : ""}" style="width:${W(r.v)}%"></i>${avg !== null ? `<u style="left:calc(${W(avg)}% - 1px)"></u>` : ""}${k === "ncr" ? `<s style="left:${W(150)}%"></s>` : ""}</span>
         <span class="bv ${s && s !== "good" ? "s-" + s : ""}">${fmt(r.v, k)}${m.unit === "%" ? "<small>%</small>" : ""}</span></button>` }).join("");
     return `<article class="mc" data-k="${k}" aria-current="${S.metric === k}">
       <button type="button" class="mc-h" data-k="${k}"><div><h3>${m.name}</h3><span class="def1">${MC_DEF[k]}</span></div>
         <div class="mc-k"><span>업계 합산평균</span><b>${fmt(avg, k)}<small>%</small></b>${deltaHTML(k, avg, pavg)}</div></button>
+      ${AGG_LBL[k] ? (() => { const [sn, sd] = aggSums(k, q); return `<div class="mc-c">
+        <div><span>${AGG_LBL[k][0]} 합계</span><b>${eok(sn)}<small>억원</small></b></div><i>÷</i>
+        <div><span>${AGG_LBL[k][1]} 합계</span><b>${eok(sd)}<small>억원</small></b></div></div>` })() : ""}
       <div class="mc-sp"><div class="sp-t">업계 4분기 추이</div>${sparkSVG(Q4.map(qq => indAvg(k, qq)))}
-        <div class="sp-q" style="grid-template-columns:repeat(${Q4.length},minmax(0,1fr))">${Q4.map((qq, i) => `<div${i === Q4.length - 1 ? ' class="last"' : ""}><span>${qShort(qq)}</span><b>${fmt(indAvg(k, qq), k)}${m.unit === "%" ? "<small>%</small>" : ""}</b></div>`).join("")}</div></div>
+        <div class="sp-q" style="grid-template-columns:repeat(${Q4.length},minmax(0,1fr))">${Q4.map((qq, i) => `<div${i === Q4.length - 1 ? ' class="last"' : ""}><span><em class="qf">${qShort(qq)}</em><em class="qs">${qq.slice(5)}Q</em></span><b>${fmt(indAvg(k, qq), k)}${m.unit === "%" ? "<small>%</small>" : ""}</b></div>`).join("")}</div></div>
       <div class="mc-list">${list}</div>
       <div class="mc-f"><span>${m.dir === -1 ? "낮은 순" : "높은 순"} · 검은 세로선 업계${k === "ncr" ? " · 빨간 점선 150%" : ""}</span>${myRank ? `<span>대신 <b>${myRank}위</b>/${rows.length}</span>` : ""}</div>
     </article>` }).join("");
@@ -1001,14 +1072,17 @@ function init(data) {
     const tr = e.target.closest("tr.link"); if (tr) go("company", tr.dataset.c);
   });
   const toCo = e => { const b = e.target.closest("[data-c]"); if (b) go("company", b.dataset.c) };
+  $("keys").addEventListener("click", e => {
+    const b = e.target.closest(".key[data-k]"); if (!b) return;
+    const k = b.dataset.k;
+    if (M[k]) { S.metric = k; render(); $("detail").scrollIntoView({ behavior: "smooth", block: "start" }) }
+  });
   $("mcards").addEventListener("click", e => {
     const h = e.target.closest(".mc-h");
     if (h) { S.metric = h.dataset.k; render(); $("detail").scrollIntoView({ behavior: "smooth", block: "start" }); return }
     toCo(e);
   });
   $("hero").addEventListener("click", toCo);
-  $("trend-lgd").addEventListener("click", e => { const b = e.target.closest("button"); if (b) { S.focus = S.focus === b.dataset.c ? null : b.dataset.c; renderTrend() } });
-  $("out-toggle").addEventListener("click", () => { S.showOut = !S.showOut; renderTrend() });
   $("raw-toggle").addEventListener("click", () => { S.rawAll = !S.rawAll; renderRaw() });
   $("t-sum").addEventListener("keydown", e => { const tr = e.target.closest("tr.link"); if (tr && e.key === "Enter") go("company", tr.dataset.c) });
   window.addEventListener("hashchange", () => { fromHash(); render() });
